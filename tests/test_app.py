@@ -67,4 +67,3 @@ class AppTests(unittest.TestCase):
         self.assertIsNone(a.session_state['timer'].deadline)
 
 if __name__=='__main__':unittest.main()
-

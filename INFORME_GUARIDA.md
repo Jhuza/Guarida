@@ -1,7 +1,7 @@
 # Guarida: simulación de un cubículo inteligente de estudio
 
-**Autor:** Juan José Hoyos · **Asignatura:** Interfaces Multimodales  
-**Versión:** primera entrega técnica revisable · **Fecha:** 9 de noviembre de 2026  
+**Autor:** Juan José Hoyos · **Asignatura:** Interfaces Multimodales
+**Versión:** primera entrega técnica revisable · **Fecha:** 9 de noviembre de 2026
 **Institución y docente:** completar antes de entregar.
 
 ## 1. Resumen
