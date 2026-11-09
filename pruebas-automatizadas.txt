@@ -1,0 +1,29 @@
+test_edit_tasks_and_reset_progress (test_app.AppTests.test_edit_tasks_and_reset_progress) ... 2026-11-09 03:23:01.814 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_goal_and_empty_input (test_app.AppTests.test_goal_and_empty_input) ... 2026-11-09 03:23:03.134 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_offline_request_is_not_success (test_app.AppTests.test_offline_request_is_not_success) ... 2026-11-09 03:23:03.451 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_terminate_cancels_waiting_timer (test_app.AppTests.test_terminate_cancels_waiting_timer) ... 2026-11-09 03:23:03.745 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-09 03:23:03.971 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_timer_waits_for_matching_device_ack (test_app.AppTests.test_timer_waits_for_matching_device_ack) ... 2026-11-09 03:23:04.093 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-11-09 03:23:04.364 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_errors_are_safe_and_actionable (test_assistant.AssistantTests.test_errors_are_safe_and_actionable) ... ok
+test_invalid_response (test_assistant.AssistantTests.test_invalid_response) ... ok
+test_no_key_no_request (test_assistant.AssistantTests.test_no_key_no_request) ... ok
+test_success_and_bounded_history (test_assistant.AssistantTests.test_success_and_bounded_history) ... ok
+test_ack_matches_request (test_core.ProtocolTests.test_ack_matches_request) ... ok
+test_device_button_updates (test_core.ProtocolTests.test_device_button_updates) ... ok
+test_invalid_command (test_core.ProtocolTests.test_invalid_command) ... ok
+test_invalid_messages_do_not_mutate (test_core.ProtocolTests.test_invalid_messages_do_not_mutate) ... ok
+test_stale_device (test_core.ProtocolTests.test_stale_device) ... ok
+test_timer_pause_resume (test_core.ProtocolTests.test_timer_pause_resume) ... ok
+test_wrong_ack_not_confirmed (test_core.ProtocolTests.test_wrong_ack_not_confirmed) ... ok
+test_wrong_state_same_id (test_core.ProtocolTests.test_wrong_state_same_id) ... ok
+
+----------------------------------------------------------------------
+Ran 17 tests in 2.677s
+
+OK
