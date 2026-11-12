@@ -1,5 +1,7 @@
 # Guarida: simulación de un cubículo inteligente de estudio
 
+**Enlaces de entrega actualizados el 12 de noviembre de 2026:** [repositorio GitHub privado](https://github.com/Jhuza/Guarida) · [simulación Wokwi pública](https://wokwi.com/projects/480507284209602561). Pendientes: acceso del evaluador al repositorio y despliegue de Streamlit. Los resultados y limitaciones del informe deben leerse con esta actualización de publicación.
+
 **Autor:** Juan José Hoyos · **Asignatura:** Interfaces Multimodales
 **Versión:** primera entrega técnica revisable · **Fecha:** 9 de noviembre de 2026
 **Institución y docente:** completar antes de entregar.

@@ -1,5 +1,7 @@
 # Guarida · seguimiento de la rúbrica
 
+Actualización Wokwi, 12 de noviembre de 2026: [simulación pública guardada](https://wokwi.com/projects/480507284209602561), con autorización del autor. Se comprobó compilación y arranque antes de guardar. Esto cierra el pendiente de guardar/enlazar A1; no sustituye la prueba de integración desde Streamlit publicado.
+
 Actualizado: 9 de noviembre de 2026. Esta matriz registra evidencias; no asigna una nota ni afirma que la entrega esté completa.
 
 Actualización de entrega, 12 de noviembre de 2026: código, pruebas, circuito, informe y capturas subidos a [Jhuza/Guarida](https://github.com/Jhuza/Guarida), repositorio privado. La publicación pendiente de A5 queda realizada; todavía falta comprobar acceso del evaluador e instalación en destino. Esta actualización no implica nuevas pruebas funcionales.

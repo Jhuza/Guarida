@@ -18,13 +18,15 @@ En este computador ya existe el entorno `../../work/venv`.
 
 ## Wokwi
 
+Simulación pública guardada el 12 de noviembre de 2026: [Abrir Guarida en Wokwi](https://wokwi.com/projects/480507284209602561). Para ejecutarla, abrir el enlace y pulsar el botón de inicio. Las instrucciones siguientes permiten reconstruir una copia desde los archivos del repositorio.
+
 1. Abrir https://wokwi.com/projects/new/esp32.
 2. Copiar `wokwi/sketch.ino` y `wokwi/diagram.json` en las pestañas correspondientes.
 3. Añadir las bibliotecas de `wokwi/libraries.txt` en Library Manager, o pegar ese archivo en la pestaña libraries.txt.
 4. Iniciar simulación y esperar conexión Wi-Fi y MQTT.
 5. En Streamlit, pulsar Conectar. El código de cubículo debe coincidir con ROOM del firmware.
 
-La sesión de Wokwi no está guardada en una cuenta: conservar estos archivos y guardar una copia del proyecto al iniciar sesión.
+El proyecto guardado incluye firmware, circuito y bibliotecas. La compilación se comprobó antes del guardado; la prueba completa desde el futuro despliegue de Streamlit sigue pendiente.
 
 ## Arquitectura
 
