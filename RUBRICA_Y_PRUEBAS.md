@@ -2,6 +2,8 @@
 
 Actualizado: 9 de noviembre de 2026. Esta matriz registra evidencias; no asigna una nota ni afirma que la entrega esté completa.
 
+Actualización de entrega, 12 de noviembre de 2026: código, pruebas, circuito, informe y capturas subidos a [Jhuza/Guarida](https://github.com/Jhuza/Guarida), repositorio privado. La publicación pendiente de A5 queda realizada; todavía falta comprobar acceso del evaluador e instalación en destino. Esta actualización no implica nuevas pruebas funcionales.
+
 | Criterio | Evidencia actual | Trabajo pendiente |
 |---|---|---|
 | A1 · Wokwi, 10 % | Circuito ESP32, pantalla OLED y tres botones; firmware compiló y publicó estados en la sesión anterior. | Guardar proyecto en cuenta; la ida y vuelta se verificó el 9 de noviembre. |

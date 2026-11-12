@@ -2,6 +2,8 @@
 
 Prototipo académico de Juan José Hoyos. Streamlit + MQTT + ESP32 virtual en Wokwi + Babylon.js. Sin hardware físico.
 
+Repositorio: [Jhuza/Guarida](https://github.com/Jhuza/Guarida). Subido el 12 de noviembre de 2026 como privado. Para que el profesor pueda revisarlo, será necesario darle acceso o decidir su publicación pública antes de entregar.
+
 ## Ejecutar
 
 Python 3.14 fue el entorno probado. Desde esta carpeta:
@@ -44,7 +46,7 @@ El temporizador iniciado desde Streamlit espera una confirmación del estado sol
 - [Matriz de rúbrica y evidencias](RUBRICA_Y_PRUEBAS.md).
 - [Prueba con participantes y guion de sustentación](VALIDACION_Y_SUSTENTACION.md).
 
-Antes de entregar, guardar el proyecto en una cuenta de Wokwi, publicar el repositorio y añadir sus enlaces. La publicación en Streamlit requiere seleccionar `app.py` como archivo de entrada, instalar `requirements.txt` y configurar secretos si se activa la IA. El despliegue aún no está comprobado; verificar conectividad MQTT desde el servidor de destino.
+Antes de entregar, guardar el proyecto en una cuenta de Wokwi y añadir su enlace; comprobar también el acceso del profesor al repositorio. La publicación en Streamlit requiere seleccionar `app.py` como archivo de entrada, instalar `requirements.txt` y configurar secretos si se activa la IA. El despliegue aún no está comprobado; verificar conectividad MQTT desde el servidor de destino.
 
 ## Pruebas
 
