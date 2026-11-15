@@ -1,5 +1,6 @@
 import unittest
 import json
+from unittest.mock import patch, Mock
 from streamlit.testing.v1 import AppTest
 from core import DeviceState, command
 
@@ -10,6 +11,23 @@ class FakeConnection:
     def send(self,state): self.device.request(command(state))
 
 class AppTests(unittest.TestCase):
+    def test_interior_chat_reaches_server_once(self):
+        component=Mock(return_value={'id':'chat-test','action':'chat','prompt':'Explica las interfaces'})
+        with patch('streamlit.components.v1.declare_component',return_value=component), patch('assistant_service.reply',return_value='Una interfaz conecta dos partes.') as reply:
+            a=AppTest.from_file('../app.py').run(timeout=30)
+            self.assertEqual(len(a.exception),0)
+            self.assertEqual(a.session_state['chat'][-1]['content'],'Una interfaz conecta dos partes.')
+            a.run()
+            self.assertEqual(reply.call_count,1)
+
+    def test_interior_mood_offline_does_not_start_timer(self):
+        component=Mock(return_value={'id':'mood-test','action':'mood','mood':'gamer'})
+        with patch('streamlit.components.v1.declare_component',return_value=component):
+            a=AppTest.from_file('../app.py').run(timeout=30)
+            self.assertEqual(len(a.exception),0)
+            self.assertEqual(a.session_state['visual_mood'],'gamer')
+            self.assertIsNone(a.session_state['timer'].deadline)
+
     def test_goal_and_empty_input(self):
         a=AppTest.from_file('../app.py').run(timeout=30)
         self.assertEqual(len(a.exception),0)

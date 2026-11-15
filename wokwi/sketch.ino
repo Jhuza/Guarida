@@ -31,7 +31,7 @@ void received(char* topic,byte* payload,unsigned int length){
  if(d["v"].as<int>()!=1||!d["id"].is<String>()||!d["state"].is<String>())return;
  String id=d["id"].as<String>(),s=d["state"].as<String>();
  if(id.length()<1||id.length()>64)return;
- if(s!="concentracion"&&s!="descanso"&&s!="disponible")return;
+ if(s!="concentracion"&&s!="descanso"&&s!="disponible"&&s!="gamer")return;
  if(id==lastId){publishState(id,"duplicate");return;}
  currentState=s;lastId=id;render();publishState(id,"command");
 }

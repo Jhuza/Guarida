@@ -7,6 +7,10 @@ def packet(state='concentracion',id='other'):
     return json.dumps(dict(v=1,state=state,id=id,source='wokwi'))
 
 class ProtocolTests(unittest.TestCase):
+    def test_gamer_round_trip(self):
+        d=DeviceState();c=command('gamer');d.request(c,100)
+        d.receive(json.dumps({**c,'source':'wokwi'}),101)
+        self.assertEqual(d.state,'gamer');self.assertIsNone(d.pending)
     def test_invalid_command(self):
         with self.assertRaises(ValueError):command('invalid')
     def test_ack_matches_request(self):

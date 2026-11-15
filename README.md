@@ -1,5 +1,11 @@
 # Guarida · simulación de estudio
 
+## Actualización visual · 13 de noviembre de 2026
+
+La aplicación usa ahora `frontend/` como componente interactivo de Babylon.js: recorrido, puerta corredera, privacidad del vidrio, cuatro moods y chat de IA en el panel interior. Consulta [CAMBIOS_VISUALES.md](CAMBIOS_VISUALES.md) para uso, alcance y comprobaciones. `scene.html` se conserva únicamente como escena histórica y no es la vista activa.
+
+No incluye pagos ni su simulación. El acceso es libre; las cuentas no están implementadas. La IA necesita la clave del servidor. Actualiza `wokwi/sketch.ino` en la simulación guardada para admitir el modo gamer.
+
 Prototipo académico de Juan José Hoyos. Streamlit + MQTT + ESP32 virtual en Wokwi + Babylon.js. Sin hardware físico.
 
 Repositorio: [Jhuza/Guarida](https://github.com/Jhuza/Guarida). Subido el 12 de noviembre de 2026 como privado. Para que el profesor pueda revisarlo, será necesario darle acceso o decidir su publicación pública antes de entregar.
@@ -30,11 +36,11 @@ El proyecto guardado incluye firmware, circuito y bibliotecas. La compilación s
 
 ## Arquitectura
 
-Streamlit publica órdenes JSON en `guarida/{room}/command`; Wokwi las valida, cambia su pantalla y publica confirmación en `guarida/{room}/state`. Los botones físicos simulados producen eventos independientes. La escena Babylon recibe el mismo estado por MQTT sobre WebSockets seguros y permite enviar órdenes.
+Streamlit publica órdenes JSON en `guarida/{room}/command`; Wokwi las valida, cambia su pantalla y publica confirmación en `guarida/{room}/state`. Los botones físicos simulados producen eventos independientes. La escena Babylon recibe el estado confirmado a través del componente de Streamlit y envía las selecciones al servidor, que publica las órdenes por MQTT.
 
 Cada solicitud tiene un identificador. Publicar no equivale a confirmar. Se muestran solicitudes pendientes y pérdidas de señal. El broker público solo transporta estados técnicos; no recibe objetivos, conversaciones ni audio. Es una infraestructura de demostración sin autenticación, no un servicio de producción.
 
-Estudio y Descanso son páginas distintas, con dos zonas visibles en 3D. Los controles de voz dependen del navegador; los botones permanecen como alternativa. El audio actual es una demostración de tonos estéreo, no una playlist musical ni un tratamiento.
+Estudio y Descanso son páginas distintas, con dos zonas visibles en 3D. Los controles de voz dependen del navegador; los botones permanecen como alternativa. El panel actual reproduce archivos musicales locales elegidos por el visitante; no incluye una playlist ni se presenta como tratamiento.
 
 ## Alcance real
 
@@ -70,3 +76,4 @@ python tests/network_probe.py
 - https://doc.babylonjs.com/features/ — motor 3D de navegador.
 
 Se reemplazó el componente HTML antiguo de Streamlit por st.iframe, comprobando su API instalada. Se fijaron las versiones de dependencias para evitar combinar requisitos incompatibles del portafolio.
+

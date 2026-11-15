@@ -2,6 +2,8 @@ import json
 import re
 import os
 import math
+import time
+from streamlit.components.v1 import declare_component
 from pathlib import Path
 import streamlit as st
 from connection import Connection
@@ -9,6 +11,7 @@ from core import LABELS, Timer
 from assistant_service import reply, AssistantError
 
 ROOT = Path(__file__).parent
+room_component = declare_component('guarida_room', path=str(ROOT/'frontend'))
 st.set_page_config(page_title='Guarida · Aurora', page_icon='◉', layout='wide')
 st.markdown('''<style>.stApp{background:radial-gradient(ellipse at 85% 0%,#132a47,transparent 55%),#05070b} h1{font-family:Georgia,serif;font-weight:400} .stButton button{border-radius:14px} [data-testid="stSidebar"]{background:#0b111c} </style>''',unsafe_allow_html=True)
 if 'timer' not in st.session_state:
@@ -83,11 +86,41 @@ def live_status():
     else:
         st.info('Conecta MQTT y ejecuta Wokwi para confirmar estados.')
 
+@st.fragment(run_every=1)
 def scene(zone):
-    cfg = {'room': st.session_state.get('active_room',room), 'zone':zone, 'host':host}
-    html = (ROOT/'scene.html').read_text(encoding='utf-8').replace('__CONFIG__',json.dumps(cfg).replace('<','\\u003c'))
-    # Isolated iframe keeps Babylon and audio independent of Python dependencies.
-    st.iframe(html, height=560, alt='Guarida: ambientes de estudio y descanso en 3D')
+    conn = st.session_state.get('conn')
+    status = 'Vista local · Wokwi sin conectar'
+    if conn:
+        conn.poll()
+        status = conn.device.status() if conn.connected else 'Sin conexión al broker'
+        if conn.device.status() == 'Confirmado' and conn.connected:
+            st.session_state['visual_mood'] = conn.device.state
+    timer = st.session_state.timer
+    remaining = timer.left()
+    result = room_component(
+        mood=st.session_state.get('visual_mood', 'disponible'), status=status,
+        ai_enabled=bool(ai_key()), chat=st.session_state.chat,
+        ai_error=st.session_state.get('scene_ai_error', ''), remaining=remaining,
+        deadline=(time.time()+remaining)*1000 if timer.deadline else None,
+        key='room-'+zone, default=None)
+    if not isinstance(result, dict) or result.get('id') == st.session_state.get('scene_event'):
+        return
+    st.session_state['scene_event'] = result.get('id')
+    if result.get('action') == 'mood' and result.get('mood') in LABELS:
+        st.session_state['visual_mood'] = result['mood']
+        if conn and conn.connected:
+            conn.send(result['mood'])
+    elif result.get('action') == 'chat':
+        prompt = str(result.get('prompt', '')).strip()[:4000]
+        if prompt:
+            history = st.session_state.chat + [{'role':'user', 'content':prompt}]
+            try:
+                answer = reply(ai_key(), history, st.session_state.goal)
+                st.session_state.chat = (history + [{'role':'assistant', 'content':answer}])[-12:]
+                st.session_state['scene_ai_error'] = ''
+            except AssistantError as exc:
+                st.session_state['scene_ai_error'] = str(exc)
+    st.rerun()
 
 @st.fragment(run_every=1)
 def timer_panel():
@@ -188,5 +221,6 @@ def rest():
         timer_panel()
         st.caption('El sonido ambiental se activa desde la escena. Es una preferencia, no una intervención terapéutica.')
         live_status()
+    assistant_panel()
 
 st.navigation([st.Page(study,title='Estudio',icon='📖'),st.Page(rest,title='Descanso',icon='☕')]).run()

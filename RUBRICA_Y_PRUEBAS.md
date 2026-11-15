@@ -1,5 +1,11 @@
 # Guarida · seguimiento de la rúbrica
 
+## Revisión visual · 13 de noviembre de 2026
+
+20 pruebas automatizadas aprobadas en esta versión, incluidas las 17 anteriores y tres nuevas: ida/vuelta del estado gamer, envío del chat interior al adaptador del servidor sin duplicados y selección local de mood sin iniciar el temporizador. Las pruebas de IA usan respuestas simuladas del adaptador; no prueban conexión real con Groq. Sintaxis JavaScript comprobada con Node.
+
+La escena conserva las páginas Estudio/Descanso y modalidades de botones, texto, voz, síntesis y audio; el control interior añade privacidad, intensidad, moods y chat. Estas adiciones no sustituyen A1/A2: falta repetir integración real con el firmware actualizado en Wokwi y registrar evidencia. No se han realizado pruebas nuevas con participantes ni se afirma completar toda la rúbrica.
+
 Actualización Wokwi, 12 de noviembre de 2026: [simulación pública guardada](https://wokwi.com/projects/480507284209602561), con autorización del autor. Se comprobó compilación y arranque antes de guardar. Esto cierra el pendiente de guardar/enlazar A1; no sustituye la prueba de integración desde Streamlit publicado.
 
 Actualizado: 9 de noviembre de 2026. Esta matriz registra evidencias; no asigna una nota ni afirma que la entrega esté completa.

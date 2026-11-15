@@ -3,8 +3,8 @@ import json
 import time
 import uuid
 
-STATES = ('concentracion', 'descanso', 'disponible')
-LABELS = dict(zip(STATES, ('Concentración', 'Descanso', 'Disponible')))
+STATES = ('concentracion', 'descanso', 'disponible', 'gamer')
+LABELS = dict(zip(STATES, ('Concentración', 'Descanso', 'Disponible', 'Gamer / ocio')))
 
 def command(state):
     if state not in STATES:
