@@ -1,5 +1,13 @@
 # Guarida · seguimiento de la rúbrica
 
+## Actualización MQTT · 16 de noviembre de 2026
+
+31 pruebas Python aprobadas. Firmware de cuatro botones compilado en Wokwi; prueba real desde la aplicación local React por WebSocket seguro y Wokwi por TCP: Estudio y Ocio recibieron confirmaciones coincidentes, el botón Descanso actualizó la app, el temporizador arrancó tras confirmación y detener Wokwi produjo «Sin señal reciente» manteniendo el broker conectado. No se utilizó emulador Python en esta prueba.
+
+Evidencia de órdenes: `3939e868f12e47268d22ebf2833d7147` (concentración), `f69d7cc061624250a6c58f26b0c1b71f` (gamer), `d2086a1769b144a38a8d5841a18ffe8e` (sesión descanso); arranque Wokwi `7c6403e5`.
+
+La actualización React/MQTT se publicó en GitHub main. Streamlit Cloud permaneció en pantalla de arranque durante la comprobación: no se certifica todavía el nuevo despliegue público. Guardar el circuito actualizado sobre el enlace original de Wokwi requiere iniciar sesión con su cuenta propietaria; los cambios sí están en GitHub. Consultar `DEMO_MQTT.md` para el ensayo. Los registros anteriores se conservan como historial.
+
 ## Revisión visual · 13 de noviembre de 2026
 
 20 pruebas automatizadas aprobadas en esta versión, incluidas las 17 anteriores y tres nuevas: ida/vuelta del estado gamer, envío del chat interior al adaptador del servidor sin duplicados y selección local de mood sin iniciar el temporizador. Las pruebas de IA usan respuestas simuladas del adaptador; no prueban conexión real con Groq. Sintaxis JavaScript comprobada con Node.
