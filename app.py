@@ -9,11 +9,14 @@ import streamlit as st
 from connection import Connection
 from core import LABELS, Timer
 from assistant_service import reply, AssistantError
+from panel_events import handle_panel_event
 
 ROOT = Path(__file__).parent
-room_component = declare_component('guarida_room', path=str(ROOT/'frontend'))
+UI_BUILD = ROOT/'frontend-react'/'dist'
+UI_PATH = ROOT/'frontend' if os.getenv('GUARIDA_UI') == 'legacy' or not (UI_BUILD/'index.html').exists() else UI_BUILD
+room_component = declare_component('guarida_room', path=str(UI_PATH))
 st.set_page_config(page_title='Guarida · Aurora', page_icon='◉', layout='wide')
-st.markdown('''<style>.stApp{background:radial-gradient(ellipse at 85% 0%,#132a47,transparent 55%),#05070b} h1{font-family:Georgia,serif;font-weight:400} .stButton button{border-radius:14px} [data-testid="stSidebar"]{background:#0b111c} </style>''',unsafe_allow_html=True)
+st.markdown('''<style>.stApp{background:#f4f3ec} h1{font-family:Georgia,serif;font-weight:400;letter-spacing:-.7px} .stButton button{border-radius:10px} [data-testid="stSidebar"]{background:#e9eddf} .block-container{padding-top:2.5rem} </style>''',unsafe_allow_html=True)
 if 'timer' not in st.session_state:
     st.session_state.timer = Timer()
     st.session_state.tasks = []
@@ -93,6 +96,8 @@ def scene(zone):
     if conn:
         conn.poll()
         status = conn.device.status() if conn.connected else 'Sin conexión al broker'
+        if conn.device.source == 'test-emulator':
+            status = 'Emulador Python · ' + status
         if conn.device.status() == 'Confirmado' and conn.connected:
             st.session_state['visual_mood'] = conn.device.state
     timer = st.session_state.timer
@@ -101,26 +106,13 @@ def scene(zone):
         mood=st.session_state.get('visual_mood', 'disponible'), status=status,
         ai_enabled=bool(ai_key()), chat=st.session_state.chat,
         ai_error=st.session_state.get('scene_ai_error', ''), remaining=remaining,
+        ack_id=st.session_state.get('scene_event'), connected=bool(conn and conn.connected),
+        device_online=bool(conn and conn.connected and conn.device.source == 'wokwi' and time.monotonic()-conn.device.last_seen<=15),
+        panel_error=st.session_state.get('panel_error', ''), waiting_timer=bool(st.session_state.get('planned_timer')),
         deadline=(time.time()+remaining)*1000 if timer.deadline else None,
         key='room-'+zone, default=None)
-    if not isinstance(result, dict) or result.get('id') == st.session_state.get('scene_event'):
-        return
-    st.session_state['scene_event'] = result.get('id')
-    if result.get('action') == 'mood' and result.get('mood') in LABELS:
-        st.session_state['visual_mood'] = result['mood']
-        if conn and conn.connected:
-            conn.send(result['mood'])
-    elif result.get('action') == 'chat':
-        prompt = str(result.get('prompt', '')).strip()[:4000]
-        if prompt:
-            history = st.session_state.chat + [{'role':'user', 'content':prompt}]
-            try:
-                answer = reply(ai_key(), history, st.session_state.goal)
-                st.session_state.chat = (history + [{'role':'assistant', 'content':answer}])[-12:]
-                st.session_state['scene_ai_error'] = ''
-            except AssistantError as exc:
-                st.session_state['scene_ai_error'] = str(exc)
-    st.rerun()
+    if handle_panel_event(result, st.session_state, conn, reply, ai_key()):
+        st.rerun()
 
 @st.fragment(run_every=1)
 def timer_panel():
@@ -167,8 +159,11 @@ def assistant_panel():
 def study():
     st.caption('01 / ESTUDIO')
     st.title('Tu siguiente paso empieza aquí.')
-    left,right=st.columns([1.55,1])
-    with left: scene('study')
+    scene('study')
+    left,right=st.columns([.4,1])
+    with left:
+        st.subheader('Tu próxima meta')
+        st.write('Prepara un objetivo concreto y guarda los pasos que quieres completar. El panel del cubículo acompaña tu sesión.')
     with right:
         st.subheader('¿Qué quieres lograr hoy?')
         goal=st.text_input('Objetivo de la sesión',value=st.session_state.goal,placeholder='Preparar el parcial de interfaces')
@@ -209,8 +204,11 @@ def study():
 def rest():
     st.caption('02 / DESCANSO')
     st.title('Haz espacio para una pausa.')
-    left,right=st.columns([1.55,1])
-    with left: scene('rest')
+    scene('rest')
+    left,right=st.columns([.4,1])
+    with left:
+        st.subheader('Una pausa a tu ritmo')
+        st.write('Ajusta la luz, escucha tu música y date un momento antes de volver.')
     with right:
         st.write('Levántate, cambia de postura y mira lejos de la pantalla.')
         minutes=st.slider('Minutos de descanso',1,20,5)

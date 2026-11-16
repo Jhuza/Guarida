@@ -1,5 +1,9 @@
 # Guarida · simulación de estudio
 
+## Iteración React · 16 de noviembre de 2026
+
+La interfaz activa de esta rama es React + Vite + Babylon.js, servida por Streamlit desde `frontend-react/dist`. Consulta [ENTREGA_REACT.md](ENTREGA_REACT.md) para ejecución, retorno a la interfaz anterior, pruebas y pendientes. Los apartados siguientes conservan el historial de la versión anterior.
+
 ## Actualización visual · 13 de noviembre de 2026
 
 La aplicación usa ahora `frontend/` como componente interactivo de Babylon.js: recorrido, puerta corredera, privacidad del vidrio, cuatro moods y chat de IA en el panel interior. Consulta [CAMBIOS_VISUALES.md](CAMBIOS_VISUALES.md) para uso, alcance y comprobaciones. `scene.html` se conserva únicamente como escena histórica y no es la vista activa.

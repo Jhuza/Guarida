@@ -16,7 +16,7 @@ try:
  deadline=time.monotonic()+15
  while not app.connected and time.monotonic()<deadline:time.sleep(.1)
  time.sleep(1)
- for s in ('concentracion','descanso','disponible'):
+ for s in ('concentracion','descanso','disponible','gamer'):
     app.send(s);deadline=time.monotonic()+10
     while app.device.pending and time.monotonic()<deadline:app.poll();time.sleep(.1)
     assert app.device.pending is None and app.device.state==s,(s,app.device.status())
