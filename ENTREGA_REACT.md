@@ -24,7 +24,7 @@ npm test
 npm run build
 ```
 
-Se incluye `dist` para que Streamlit Cloud pueda servir la interfaz sin instalar Node. La rama de trabajo es `mejora/react-vite`; esta iteración no reemplaza automáticamente la versión pública de main.
+Se incluye `dist` para que Streamlit Cloud pueda servir la interfaz sin instalar Node. La rama de trabajo es `mejora/react-vite`. Por solicitud del autor, esta versión y las mejoras de MQTT se publicaron en `main` el 16 de noviembre; el despliegue público debe comprobarse tras su reinicio.
 
 ## Funcionalidad y diseño
 
