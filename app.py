@@ -34,12 +34,35 @@ def ai_key():
     except (FileNotFoundError, st.errors.StreamlitSecretNotFoundError):
         return ''
 
+@st.fragment(run_every=1)
+def connection_status():
+    conn = st.session_state.get('conn')
+    if not conn:
+        st.caption('1. Pulsa Conectar. 2. Inicia ▶ en Wokwi.')
+        return
+    conn.poll()
+    if conn.connected:
+        st.success('Broker MQTT conectado')
+        if conn.device.source == 'wokwi' and time.monotonic()-conn.device.last_seen <= 15:
+            st.success('Wokwi en línea · '+LABELS.get(conn.device.state, ''))
+        else:
+            st.warning('Sin señal reciente de Wokwi. Inicia ▶ y comprueba el código de cubículo.')
+    elif getattr(conn, 'error', ''):
+        st.error(conn.error)
+    elif time.monotonic()-getattr(conn, 'started_at', time.monotonic()) > 15:
+        st.warning('El broker no responde todavía. Prueba el otro transporte y pulsa Conectar.')
+    else:
+        st.info('Conectando al broker…')
+    st.caption(getattr(conn, 'endpoint', ''))
+    st.caption('Canal activo: '+st.session_state.get('active_room', ''))
+
 with st.sidebar:
     st.markdown('## ◉ GUARIDA')
     st.caption('Un espacio para comenzar.')
     with st.expander('Conexión del simulador', expanded='conn' not in st.session_state):
         host = st.text_input('Broker', 'broker.hivemq.com', disabled=True)
         room = st.text_input('Código de cubículo', 'jhuza-guarida-20261108')
+        transport = st.selectbox('Transporte MQTT', ['WebSocket seguro · 8884', 'TCP · 1883'])
         st.caption('Usa el mismo código en Wokwi. Broker público: solo estados de prueba, sin objetivos ni audio.')
         if st.button('Conectar'):
             if not re.fullmatch(r'[a-zA-Z0-9_-]{3,64}', room):
@@ -47,13 +70,16 @@ with st.sidebar:
             else:
                 if 'conn' in st.session_state:
                     st.session_state.conn.close()
-                st.session_state.conn = Connection(host, 1883, room)
+                st.session_state.conn = Connection(host, 8884 if transport.startswith('WebSocket') else 1883, room,
+                                                   'websockets' if transport.startswith('WebSocket') else 'tcp')
                 st.session_state.active_room = room
                 st.session_state.pop('planned_timer', None)
         if st.button('Desconectar') and 'conn' in st.session_state:
             st.session_state.conn.close()
             del st.session_state.conn
             st.session_state.pop('planned_timer', None)
+        connection_status()
+        st.link_button('Abrir simulador Wokwi', 'https://wokwi.com/projects/480507284209602561')
     st.caption('Prototipo · hardware simulado')
 
 def send(state):

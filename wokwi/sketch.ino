@@ -12,10 +12,11 @@ PubSubClient mqtt(net);
 Adafruit_SSD1306 display(128,64,&Wire,-1);
 String prefix, currentState="disponible", lastId="", bootId;
 unsigned long lastConnect=0,lastBeat=0;
-const int pins[]={25,26,27};
-const char* states[]={"concentracion","descanso","disponible"};
-bool stable[]={HIGH,HIGH,HIGH},rawPrev[]={HIGH,HIGH,HIGH};
-unsigned long changedAt[]={0,0,0};
+const int pins[]={25,26,27,33};
+const char* states[]={"concentracion","descanso","disponible","gamer"};
+const int buttonCount=sizeof(pins)/sizeof(pins[0]);
+bool stable[]={HIGH,HIGH,HIGH,HIGH},rawPrev[]={HIGH,HIGH,HIGH,HIGH};
+unsigned long changedAt[]={0,0,0,0};
 void render(){
  display.clearDisplay(); display.setTextColor(SSD1306_WHITE);display.setTextSize(1);
  display.setCursor(0,0);display.println("GUARIDA / AURORA");display.println("---------------------");
@@ -48,7 +49,7 @@ void loop(){
   if(mqtt.connect(cid.c_str())){mqtt.subscribe((prefix+"/command").c_str(),1);publishState("","boot");}render();
  }
  mqtt.loop();
- for(int i=0;i<3;i++){
+ for(int i=0;i<buttonCount;i++){
   bool raw=digitalRead(pins[i]);if(raw!=rawPrev[i]){changedAt[i]=now;rawPrev[i]=raw;}
   if(now-changedAt[i]>40&&stable[i]!=raw){stable[i]=raw;if(raw==LOW){currentState=states[i];render();publishState("","button");}}
  }

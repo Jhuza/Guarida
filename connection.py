@@ -1,6 +1,7 @@
 import json
 import queue
 import uuid
+import time
 import paho.mqtt.client as mqtt
 from core import DeviceState, command
 
@@ -10,20 +11,33 @@ class Connection:
         self.inbox = queue.Queue(maxsize=200)
         self.connected = False
         self.error = ''
+        self.started_at = time.monotonic()
+        self.endpoint = f'{host}:{port} / {transport}'
         self.prefix = 'guarida/'+room
         self.client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2, client_id='guarida-app-'+uuid.uuid4().hex[:12], transport=transport)
         if transport == 'websockets':
             self.client.ws_set_options(path='/mqtt')
             self.client.tls_set()
         self.client.on_connect = self._connect
-        self.client.on_disconnect = lambda *args: setattr(self, 'connected', False)
+        self.client.on_disconnect = self._disconnect
+        self.client.on_connect_fail = self._connect_fail
         self.client.on_message = self._message
         self.client.connect_async(host, port, 30)
         self.client.loop_start()
     def _connect(self, client, userdata, flags, reason, properties):
         self.connected = not reason.is_failure
         if self.connected:
+            self.error = ''
             client.subscribe(self.prefix+'/state', qos=1)
+        else:
+            self.error = 'El broker rechazó la conexión: '+str(reason)
+    def _connect_fail(self, client, userdata):
+        self.connected = False
+        self.error = 'No se pudo alcanzar el broker. Reintenta o cambia el transporte.'
+    def _disconnect(self, client, userdata, flags, reason, properties):
+        self.connected = False
+        if reason.is_failure:
+            self.error = 'Se perdió la conexión al broker. Reconectando automáticamente.'
     def _message(self, client, userdata, msg):
         if msg.retain:
             return # Retained state is not evidence of a live device.
