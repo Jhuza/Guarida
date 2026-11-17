@@ -4,7 +4,11 @@ import os
 import urllib.request
 import urllib.error
 
-SYSTEM = '''Eres el asistente de estudio de Guarida. Responde en español, breve y claro.
+DEFAULT_MODEL = 'openai/gpt-oss-120b'
+
+SYSTEM = '''Te llamas Jade y eres la asistente de estudio de Guarida, integrada en JadeUI.
+Responde en español, con tono cercano, breve y claro. Preséntate como Jade si te preguntan tu nombre.
+Si falta información para ayudar, haz una pregunta concreta. Prioriza explicaciones y práctica sobre respuestas para copiar.
 Ayuda a convertir un objetivo en pasos concretos y sugiere recuperación activa,
 preguntas de práctica y pausas ajustables. No prometas mejorar la concentración.
 No afirmes controlar el cubículo ni iniciar temporizadores: el usuario usa los botones.
@@ -18,22 +22,29 @@ def reply(key, messages, goal=''):
         raise AssistantError('Configura GROQ_API_KEY para activar la IA.')
     history = [{'role': m['role'], 'content': str(m['content'])[:4000]}
                for m in messages[-12:] if m.get('role') in ('user', 'assistant')]
-    payload = {'model': os.getenv('GROQ_MODEL', 'llama-3.3-70b-versatile'),
+    model = os.getenv('GROQ_MODEL', DEFAULT_MODEL).strip() or DEFAULT_MODEL
+    payload = {'model': model,
                'messages': [{'role': 'system', 'content': SYSTEM},
                             {'role': 'user', 'content': 'Objetivo de esta sesión: '+goal[:2000]}]+history,
-               'temperature': 0.4, 'max_completion_tokens': 650}
+               'temperature': 0.4, 'max_completion_tokens': 2048}
+    if model.startswith('openai/gpt-oss-'):
+        payload.update(reasoning_effort='low', include_reasoning=False)
     req = urllib.request.Request('https://api.groq.com/openai/v1/chat/completions',
         data=json.dumps(payload).encode(),
         headers={'Authorization': 'Bearer '+key, 'Content-Type': 'application/json'}, method='POST')
     try:
         with urllib.request.urlopen(req, timeout=25) as response:
             result = json.load(response)
-        content = result['choices'][0]['message']['content']
+        choice = result['choices'][0]
+        if choice.get('finish_reason') == 'length':
+            raise AssistantError('Jade alcanzó el límite de respuesta. Prueba con una pregunta más concreta.')
+        content = choice['message']['content']
         if not isinstance(content, str) or not content.strip():
             raise ValueError('Empty response')
         return content.strip()
     except urllib.error.HTTPError as exc:
         text = {401: 'La clave no es válida.', 403: 'La cuenta no permite este modelo.',
+                404: 'El modelo no está disponible. Revisa GROQ_MODEL en la configuración del servidor.',
                 429: 'Se alcanzó el límite del servicio. Intenta más tarde.'}.get(exc.code,
                 'El proveedor no pudo responder. Revisa el modelo y vuelve a intentar.')
         raise AssistantError(text) from None

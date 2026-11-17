@@ -15,7 +15,7 @@ ROOT = Path(__file__).parent
 UI_BUILD = ROOT/'frontend-react'/'dist'
 UI_PATH = ROOT/'frontend' if os.getenv('GUARIDA_UI') == 'legacy' or not (UI_BUILD/'index.html').exists() else UI_BUILD
 room_component = declare_component('guarida_room', path=str(UI_PATH))
-st.set_page_config(page_title='Guarida · Aurora', page_icon='◉', layout='wide')
+st.set_page_config(page_title='Guarida · JadeUI', page_icon='◉', layout='wide')
 st.markdown('''<style>.stApp{background:#f4f3ec} h1{font-family:Georgia,serif;font-weight:400;letter-spacing:-.7px} .stButton button{border-radius:10px} [data-testid="stSidebar"]{background:#e9eddf} .block-container{padding-top:2.5rem} </style>''',unsafe_allow_html=True)
 if 'timer' not in st.session_state:
     st.session_state.timer = Timer()
@@ -156,10 +156,10 @@ def timer_panel():
         st.session_state.pop('planned_timer', None)
 
 def assistant_panel():
-    st.subheader('Asistente de estudio')
+    st.subheader('Jade · Asistente de estudio')
     key = ai_key()
     if not key:
-        st.info('IA pendiente de activación. Puedes organizar y editar tus tareas sin ella.')
+        st.info('Jade pendiente de activación. Puedes organizar y editar tus tareas sin ella.')
         st.caption('Configura GROQ_API_KEY en los secretos de Streamlit. No la escribas en el chat.')
         return
     st.caption('Groq recibe lo que envíes al chat y el objetivo. No se envía por MQTT. Revisa las sugerencias.')
@@ -167,12 +167,12 @@ def assistant_panel():
         with st.chat_message(message['role']):
             st.write(message['content'])
     with st.form('assistant-chat', clear_on_submit=True):
-        prompt = st.text_area('Habla con Guarida', placeholder='Ayúdame a dividir mi objetivo en tres pasos', max_chars=4000)
-        submit = st.form_submit_button('Enviar a la IA')
+        prompt = st.text_area('Habla con Jade', placeholder='Ayúdame a dividir mi objetivo en tres pasos', max_chars=4000)
+        submit = st.form_submit_button('Enviar a Jade')
     if submit and prompt.strip():
         history = st.session_state.chat + [{'role':'user','content':prompt.strip()}]
         try:
-            with st.spinner('Guarida está preparando una respuesta…'):
+            with st.spinner('Jade está preparando una respuesta…'):
                 answer = reply(key, history, st.session_state.goal)
             st.session_state.chat = (history + [{'role':'assistant','content':answer}])[-12:]
             st.rerun()
