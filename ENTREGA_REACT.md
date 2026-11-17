@@ -1,5 +1,7 @@
 # Guarida · iteración de escritorio, 16 de noviembre de 2026
 
+**Actualización de cierre:** la interfaz pública y MQTT bidireccional con Wokwi guardado ya se verificaron. El detalle vigente está en `CIERRE_ENTREGA.md`; los pendientes de guardado/despliegue de este registro histórico quedaron resueltos. IA real, evaluación con personas y voz/audio siguen pendientes.
+
 Entrega prevista: jueves 19 de noviembre, entre 6:00 y 15:00 (Colombia). Se prioriza computador. No se incluyen pagos ni simulaciones de pago. El inicio de sesión con cuentas sigue pendiente y no se presenta como implementado.
 
 ## Arquitectura y ejecución

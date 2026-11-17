@@ -1,5 +1,9 @@
 # Guarida · seguimiento de la rúbrica
 
+## Cierre de publicación · 16 de noviembre de 2026
+
+Wokwi quedó guardado con cuatro botones en el enlace original y se comprobó su persistencia al recargar. Streamlit público cargó React tras reinicio y despertar del servicio. En la prueba pública con arranque `1daec287`, Ocio recibió confirmación `35d4bff07ffd481dbf267e320396faa2`; el botón verde produjo Descanso; la sesión recibió confirmación `caba56af021d42c58a8454574e516097` y comenzó el contador; al detener Wokwi apareció «Sin señal reciente» manteniendo el broker conectado. Esto resuelve los pendientes de guardado y prueba pública indicados en el registro anterior. No resuelve IA real, voz/audio ni evaluación con participantes. Ver `CIERRE_ENTREGA.md`.
+
 ## Actualización MQTT · 16 de noviembre de 2026
 
 31 pruebas Python aprobadas. Firmware de cuatro botones compilado en Wokwi; prueba real desde la aplicación local React por WebSocket seguro y Wokwi por TCP: Estudio y Ocio recibieron confirmaciones coincidentes, el botón Descanso actualizó la app, el temporizador arrancó tras confirmación y detener Wokwi produjo «Sin señal reciente» manteniendo el broker conectado. No se utilizó emulador Python en esta prueba.

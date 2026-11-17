@@ -1,9 +1,9 @@
 # Guarida: simulación de un cubículo inteligente de estudio
 
-**Enlaces de entrega actualizados el 12 de noviembre de 2026:** [repositorio GitHub privado](https://github.com/Jhuza/Guarida) · [simulación Wokwi pública](https://wokwi.com/projects/480507284209602561). Pendientes: acceso del evaluador al repositorio y despliegue de Streamlit. Los resultados y limitaciones del informe deben leerse con esta actualización de publicación.
+**Enlaces de entrega:** [repositorio GitHub](https://github.com/Jhuza/Guarida) · [simulación Wokwi con cuatro botones](https://wokwi.com/projects/480507284209602561) · [aplicación Streamlit](https://guaridastudio.streamlit.app/). Comprobar el acceso del evaluador al repositorio antes de entregar.
 
 **Autor:** Juan José Hoyos · **Asignatura:** Interfaces Multimodales
-**Versión:** primera entrega técnica revisable · **Fecha:** 9 de noviembre de 2026
+**Versión:** React/Vite y MQTT con cuatro estados · **Fecha de revisión:** 16 de noviembre de 2026
 **Institución y docente:** completar antes de entregar.
 
 ## 1. Resumen
@@ -89,18 +89,18 @@ Diseñar y comprobar una simulación multimodal que permita organizar una sesió
 
 ```mermaid
 flowchart LR
-    U[Estudiante] --> S[Streamlit: Estudio y Descanso]
-    S -->|orden JSON / TCP| M[Broker MQTT]
+    U[Estudiante] --> B[React y Babylon.js]
+    B <-->|Componente Streamlit: acciones y estado| S[Python: Streamlit]
+    S -->|orden JSON / MQTT sobre WSS| M[Broker MQTT]
     M -->|orden| W[ESP32 virtual en Wokwi]
     W -->|confirmación y botones| M
     M -->|estado| S
-    M <-->|MQTT sobre WSS| B[Babylon.js en iframe]
     S <-->|HTTPS opcional| G[Groq: chat]
 ```
 
-El broker de demostración es `broker.hivemq.com`. Python y Wokwi usan TCP 1883; el navegador utiliza WSS 8884 y ruta `/mqtt`. MQTT.js requiere transporte WebSockets en navegador [5]. La sala identifica los temas `guarida/{room}/command` y `guarida/{room}/state`.
+El broker de demostración es `broker.hivemq.com`. Python usa por defecto WebSocket seguro en 8884 y ruta `/mqtt`, con TCP 1883 como alternativa seleccionable. Wokwi usa TCP 1883. React y Babylon se comunican con Python mediante el componente de Streamlit; el navegador no establece otra conexión MQTT. La sala identifica los temas `guarida/{room}/command` y `guarida/{room}/state`. Vite compila los recursos; Node.js no es un segundo servidor de producción.
 
-Una orden incluye `v`, `id` y `state`. El estado incluye además `source`, `cause`, `boot` y `uptime`. Los estados aceptados son `concentracion`, `descanso` y `disponible`. Solo la respuesta con id y estado correspondientes satisface una solicitud pendiente. Se ignoran estados retenidos para no tratarlos como prueba de presencia. Después de ocho segundos se muestra una orden sin confirmar; quince segundos sin estados se consideran falta de señal reciente.
+Una orden incluye `v`, `id` y `state`. El estado incluye además `source`, `cause`, `boot` y `uptime`. Los estados aceptados son `concentracion`, `descanso`, `disponible` y `gamer`. Solo la respuesta con id y estado correspondientes satisface una solicitud pendiente. Se ignoran estados retenidos para no tratarlos como prueba de presencia. Después de ocho segundos se muestra una orden sin confirmar; quince segundos sin estados se consideran falta de señal reciente.
 
 La simulación puede ejecutar su reloj más lento que el tiempo real. Esto influye en el intervalo observable de heartbeat y debe comprobarse en la conexión de clase. El broker público no autentica a los participantes: los nombres de sala no son contraseñas. Se usa únicamente para estados de demostración, sin objetivos, audio, claves ni conversaciones.
 
@@ -111,12 +111,13 @@ La simulación puede ejecutar su reloj más lento que el tiempo real. Esto influ
 | ESP32 DevKit C V4 virtual | Wi-Fi Wokwi-GUEST y cliente MQTT. |
 | OLED SSD1306 128 × 64 | SDA GPIO21, SCL GPIO22, alimentación 3V3 y GND, dirección 0x3c. |
 | Botón azul | GPIO25 a GND: concentración. |
-| Botón amarillo | GPIO26 a GND: descanso. |
-| Botón verde | GPIO27 a GND: disponible. |
+| Botón verde | GPIO26 a GND: descanso. |
+| Botón amarillo | GPIO27 a GND: disponible / bienvenida. |
+| Botón morado | GPIO33 a GND: gamer / ocio. |
 
 Los botones usan `INPUT_PULLUP` y antirrebote de 40 ms. El firmware valida órdenes, actualiza la pantalla, responde con el identificador recibido y publica heartbeat cada cuatro segundos del reloj simulado. La reconexión MQTT se reintenta periódicamente. Las bibliotecas requeridas están en `wokwi/libraries.txt`; el cableado se conserva en `diagram.json` [6–8].
 
-No se necesita comprar ni conectar un ESP32 físico. La versión actual no implementa climatización, cerradura, huella, smart glass ni tira WS2812B.
+No se necesita comprar ni conectar un ESP32 físico. La privacidad del vidrio y las luces se representan en la escena 3D; no hay actuadores físicos ni tira WS2812B, climatización, cerradura o lector de huella.
 
 ## 7. Aplicación Streamlit y modalidades
 
@@ -126,10 +127,10 @@ No se necesita comprar ni conectar un ESP32 físico. La versión actual no imple
 |---|---|---|
 | Texto | Objetivo, tareas y chat opcional. | Teclado; Groq requiere internet y clave propia. |
 | Controles gráficos | Botones, navegación, casillas, duración. | Navegador y ratón/táctil/teclado. |
-| Voz de entrada | Comandos concentración, descanso y disponible. | SpeechRecognition compatible y permiso de micrófono; pendiente validación humana. No es conversación de audio con IA. |
+| Voz de entrada | Comandos de ambiente, incluidos estudio, descanso y ocio. | SpeechRecognition compatible y permiso de micrófono; pendiente validación humana. No es conversación de audio con IA. |
 | Voz de salida | Bienvenida mediante speechSynthesis. | Voz instalada/disponible; activación por el usuario. |
-| Audio | Tonos de 220 y 228 Hz separados por canal. | Web Audio, salida estéreo y auriculares para separación; activación manual. No es una biblioteca musical. |
-| Visual 3D | Cámara orbital, pantalla y señales de estado. | WebGL, acceso a CDN de Babylon/MQTT.js y WSS. |
+| Audio | Reproducción de un archivo elegido del equipo. | Activación manual, controles de reproducción y volumen; no se envía por MQTT. |
+| Visual 3D | Cámara orbital y recorrido, puerta, pantallas, privacidad y luces. | WebGL y recursos Babylon empaquetados por Vite. Modelo procedural, no importado desde Blender. |
 
 El chat usa una llamada HTTPS con biblioteca estándar de Python, evitando añadir un SDK al entorno. El proveedor recomendado es Groq; la guía oficial muestra el modelo `llama-3.3-70b-versatile` y configuración mediante clave [10]. La disponibilidad y las cuotas dependen del servicio/cuenta [11]. La clave permanece fuera del repositorio. No se han hecho llamadas reales al proveedor por falta de credencial; las pruebas del adaptador usan respuestas simuladas.
 
@@ -137,14 +138,15 @@ El chat usa una llamada HTTPS con biblioteca estándar de Python, evitando añad
 
 | Prueba | Resultado registrado | Alcance |
 |---|---|---|
-| Suite automática, revisión actual | 17 pruebas aprobadas; dependencias sin incompatibilidades detectadas. | Protocolo, temporizador condicionado a confirmación, cancelación, interfaz, edición de tareas y adaptador IA simulado. |
-| Red de prueba | Cinco comprobaciones aprobadas en la revisión previa. | Tres estados, evento independiente y WSS/TCP; dispositivo emulado en Python. |
+| Suite automática, revisión actual | 31 pruebas Python y 3 JavaScript aprobadas; compilación Vite correcta. | Protocolo, temporizador, acciones del panel, duplicados, fallos de conexión, interfaz y adaptador IA simulado. |
+| Red de prueba | Seis comprobaciones aprobadas. | Cuatro estados, evento independiente y WSS/TCP; dispositivo emulado en Python, separado de la prueba real siguiente. |
 | Orden real a Wokwi | Concentración confirmada con id `cea5778c11d742e2aa43dd16ae0cf1f6`. | Streamlit → broker → Wokwi → clientes, observado en revisión anterior. |
-| Entrada real en Wokwi | Botón amarillo cambió a Descanso en ambos clientes. | Firmware, interfaz y escena. |
+| Entrada real en Wokwi | Botón verde cambió a Descanso en la versión React local. | Firmware, interfaz y escena; circuito de cuatro botones guardado en el enlace original. |
 | Desconexión | Se observó “Sin señal reciente”. | Wokwi detenido; captura conservada. |
 | Render y navegación | Dos páginas y escena visibles. | No equivale a evaluación de usabilidad. |
 | Audio/voz y usuarios | Pendiente. | No hay observaciones humanas registradas. |
-| IA real y despliegue público | Pendiente. | Requieren cuenta/clave y publicación. |
+| IA real | Pendiente de activación y prueba. | La implementación existe, pero las pruebas simuladas no acreditan respuesta del proveedor. |
+| Despliegue público | Interfaz React cargada tras reinicio y arranque de Streamlit. | El servicio puede dormir por inactividad; abrir antes de la sustentación. |
 
 Las capturas `evidencia-descanso.png` y `evidencia-desconexion.png` conservan las comprobaciones anteriores. El registro de la revisión actual y el protocolo para participantes acompañan este informe. Un error temporal de compilación `Failed to fetch` en Wokwi se resolvió reintentando. No se midió una mejora de aprendizaje, concentración o ansiedad.
 
@@ -152,7 +154,7 @@ Las capturas `evidencia-descanso.png` y `evidencia-desconexion.png` conservan la
 
 La simulación demuestra la viabilidad de comunicar un circuito Wokwi con una aplicación multipágina y una vista 3D, diferenciando publicación y confirmación del estado. La edición de tareas y los bloques temporales materializan el flujo propuesto a partir de la protopersona. La evidencia disponible es técnica; la utilidad para estudiantes debe evaluarse con participantes.
 
-Antes de la entrega deben guardarse y enlazarse los proyectos publicados, activar y probar la IA si se incluye en la demostración, verificar micrófono/audio, realizar las tareas de usabilidad y ensayar la sustentación. Después se abordará el diseño visual con las referencias del autor. Entre las ampliaciones se consideran conversación por audio, bienvenida flotante, otras vistas, climatización, privacidad del vidrio, acceso y luces. Ninguna se presenta como implementada.
+Antes de la entrega deben activarse y probarse la IA, verificar micrófono/audio, realizar las tareas de usabilidad y ensayar la sustentación. La versión actual representa privacidad del vidrio, luces por mood, transición naranja y aviso rojo de fin de sesión. La importación de modelos Blender y su investigación quedan para una fase posterior, junto con actuadores físicos, cuentas y pagos; estos últimos tampoco se simulan.
 
 ## 10. Referencias y anexos
 
@@ -170,4 +172,4 @@ Fuentes técnicas consultadas para esta versión; la disponibilidad de servicios
 10. Groq. Quickstart. https://console.groq.com/docs/quickstart
 11. Groq. Rate Limits. https://console.groq.com/docs/rate-limits
 
-**Anexos:** README (instalación), RUBRICA_Y_PRUEBAS (matriz), VALIDACION_Y_SUSTENTACION (protocolo y guion), carpeta tests, circuito y firmware, capturas y registro de pruebas. Los enlaces públicos de repositorio, Wokwi y Streamlit se agregarán cuando estén publicados; no se inventan enlaces de entrega.
+**Anexos:** README (instalación), RUBRICA_Y_PRUEBAS (matriz), VALIDACION_Y_SUSTENTACION (protocolo y guion), DEMO_MQTT (demostración de cuatro estados), carpeta tests, circuito y firmware, capturas y registro de pruebas. Los enlaces de entrega están al comienzo del informe.

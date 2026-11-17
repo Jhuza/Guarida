@@ -1,5 +1,9 @@
 # Guarida · simulación de estudio
 
+## Entrega actual
+
+Consulta [CIERRE_ENTREGA.md](CIERRE_ENTREGA.md) para enlaces, evidencia pública MQTT y pendientes del autor. La aplicación publicada utiliza React/Vite/Babylon servido por Streamlit y el proyecto Wokwi guardado tiene cuatro botones. Blender queda para una fase posterior.
+
 ## Iteración React · 16 de noviembre de 2026
 
 La interfaz activa de esta rama es React + Vite + Babylon.js, servida por Streamlit desde `frontend-react/dist`. Consulta [ENTREGA_REACT.md](ENTREGA_REACT.md) para ejecución, retorno a la interfaz anterior, pruebas y pendientes. Los apartados siguientes conservan el historial de la versión anterior.

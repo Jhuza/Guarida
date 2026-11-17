@@ -23,7 +23,7 @@ Tras cada sesión: priorizar problemas que impiden completar tareas, hacer corre
 | Tiempo | Qué mostrar y explicar |
 |---|---|
 | 0:00–0:40 | Problema y protopersona provisional; ausencia de entrevistas. |
-| 0:40–1:15 | Circuito virtual: ESP32, OLED, tres botones. Arquitectura y dos temas MQTT. |
+| 0:40–1:15 | Circuito virtual: ESP32, OLED, cuatro botones. Arquitectura y dos temas MQTT. |
 | 1:15–2:05 | Objetivo, edición de tareas, iniciar concentración y esperar confirmación. |
 | 2:05–2:45 | Botón Descanso en Wokwi; observar Streamlit y Babylon. Navegar a Descanso. |
 | 2:45–3:25 | Voz y audio si fueron probados en ese navegador. Alternativa por botones. |
