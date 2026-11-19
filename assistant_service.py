@@ -31,7 +31,8 @@ def reply(key, messages, goal=''):
         payload.update(reasoning_effort='low', include_reasoning=False)
     req = urllib.request.Request('https://api.groq.com/openai/v1/chat/completions',
         data=json.dumps(payload).encode(),
-        headers={'Authorization': 'Bearer '+key, 'Content-Type': 'application/json'}, method='POST')
+        headers={'Authorization': 'Bearer '+key, 'Content-Type': 'application/json',
+                 'User-Agent': 'Guarida-Jade/1.0', 'Accept': 'application/json'}, method='POST')
     try:
         with urllib.request.urlopen(req, timeout=25) as response:
             result = json.load(response)
@@ -43,10 +44,20 @@ def reply(key, messages, goal=''):
             raise ValueError('Empty response')
         return content.strip()
     except urllib.error.HTTPError as exc:
-        text = {401: 'La clave no es válida.', 403: 'La cuenta no permite este modelo.',
+        text = {401: 'La clave no es válida.', 403: 'Groq rechazó el acceso (403). Revisa los permisos del proyecto y del modelo.',
                 404: 'El modelo no está disponible. Revisa GROQ_MODEL en la configuración del servidor.',
                 429: 'Se alcanzó el límite del servicio. Intenta más tarde.'}.get(exc.code,
                 'El proveedor no pudo responder. Revisa el modelo y vuelve a intentar.')
+        if exc.code == 403:
+            try:
+                detail = json.loads(exc.read(16384)).get('error', {})
+                code = detail.get('code') if isinstance(detail, dict) else None
+                if code == 'model_permission_blocked_org':
+                    text = 'El modelo de Jade está bloqueado en Groq → Organization → Limits.'
+                elif code == 'model_permission_blocked_project':
+                    text = 'El modelo de Jade está bloqueado en Groq → Project → Limits.'
+            except (ValueError, OSError, AttributeError):
+                pass
         raise AssistantError(text) from None
     except (urllib.error.URLError, TimeoutError, OSError):
         raise AssistantError('No se pudo contactar con la IA. Puedes continuar con tus tareas.') from None
