@@ -1,6 +1,6 @@
 # Guarida · estado de cierre
 
-Fecha de revisión: 16 de noviembre de 2026. Presentación: jueves 19 de noviembre, entre 6:00 y 15:00, desde computador.
+Fecha de revisión: 19 de noviembre de 2026. Presentación: jueves 19 de noviembre, entre 6:00 y 15:00, desde computador.
 
 ## Enlaces
 
@@ -21,13 +21,13 @@ Prueba pública realizada con arranque Wokwi `1daec287`:
 | Inicio de sesión | Respuesta id `caba56af021d42c58a8454574e516097`; contador público observado en curso, después se terminó la prueba. |
 | Detener Wokwi | La app pública mostró «Sin señal reciente» y mantuvo «Broker MQTT conectado». Se reinició el circuito al terminar el ensayo. |
 
-El informe se actualizó a la arquitectura real: React no conecta directamente a MQTT; transmite acciones al servidor Python. Node/Vite se utiliza para compilar, no como servicio adicional. Se conservan 31 pruebas Python y 3 JavaScript aprobadas y compilación Vite correcta, registradas en la iteración técnica.
+El informe se actualizó a la arquitectura real: React no conecta directamente a MQTT; transmite acciones al servidor Python. Node/Vite se utiliza para compilar, no como servicio adicional. Se conservan 33 pruebas Python y 3 JavaScript aprobadas y compilación Vite correcta, registradas en la iteración técnica.
 
 ## Pendientes que requieren al autor
 
 - Institución y docente: el autor los facilitará después.
 - Resultados de pruebas con compañeros: pendientes de datos reales. No se inventan participantes, observaciones ni valoraciones.
-- IA: adaptador implementado, pero la app pública indica falta de activación. Configurar `GROQ_API_KEY` en Secrets de Streamlit y ejecutar una consulta de prueba antes de afirmar que funciona con el proveedor real. No compartir la clave en el chat.
+- Jade: activada y comprobada con dos respuestas reales el 19 de noviembre. Puede cometer errores conceptuales: revisar explicaciones. Evidencia en Verificacion-Jade.md.
 - Voz y audio: comprobar micrófono y audición en el equipo de presentación.
 - Confirmar que el profesor puede acceder al repositorio y ensayar el guion de cinco minutos.
 
@@ -38,3 +38,7 @@ Abrir la app con antelación. Si muestra inactividad, usar el botón para desper
 Mostrar la orden Ocio y su confirmación, luego el cambio desde el botón verde, iniciar una sesión y enseñar los mensajes descargables. La preparación detallada está en `DEMO_MQTT.md` y `VALIDACION_Y_SUSTENTACION.md`.
 
 Blender, importación de otros modelos y su investigación quedan para después. Pagos y simulación de pagos permanecen fuera del alcance. Este cierre técnico no equivale a certificar todos los criterios académicos ni a sustituir los datos pendientes del autor.
+
+## JadeUI de cierre
+
+Se eliminó el horizonte del modelo y la barra lateral. Fondo oscuro, título hero ampliado, navegación superior, tarjeta derecha y botones flotantes con iconos vectoriales. No se incorporaron PNG no suministrados ni modelos Blender. La conexión sigue disponible en el desplegable superior.

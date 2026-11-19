@@ -8,7 +8,7 @@
 
 ## 1. Resumen
 
-Guarida es un prototipo de cubículo de estudio que integra organización de tareas, temporización y representación de disponibilidad. La aplicación utiliza Streamlit para sus páginas Estudio y Descanso, Babylon.js para representar el espacio y MQTT para comunicarse con un ESP32 simulado en Wokwi. Permite interacción mediante texto, controles gráficos y comandos de voz, con respuestas visuales y sonoras. Se ha comprobado la comunicación en ambas direcciones con el circuito simulado. El asistente conversacional dispone de una integración opcional con Groq, pendiente de activación y validación con una clave del usuario. La propuesta parte de observaciones personales; no constituye un estudio validado de hábitos ni una intervención de eficacia demostrada.
+Guarida es un prototipo de cubículo de estudio que integra organización de tareas, temporización y representación de disponibilidad. La aplicación utiliza Streamlit para sus páginas Estudio y Descanso, Babylon.js para representar el espacio y MQTT para comunicarse con un ESP32 simulado en Wokwi. Permite interacción mediante texto, controles gráficos y comandos de voz, con respuestas visuales y sonoras. Se ha comprobado la comunicación en ambas direcciones con el circuito simulado. El asistente conversacional dispone de una integración opcional con Groq, activada y verificada con respuestas reales el 19 de noviembre de 2026. La propuesta parte de observaciones personales; no constituye un estudio validado de hábitos ni una intervención de eficacia demostrada.
 
 ## 2. Introducción, problema y objetivos
 
@@ -69,7 +69,7 @@ Diseñar y comprobar una simulación multimodal que permita organizar una sesió
 | RF05 | Gestionar tiempos. | Iniciar desde Streamlit espera confirmación; pausa, reanudación y fin funcionan. |
 | RF06 | Usar modalidades alternativas. | Texto y botones están disponibles; voz informa si no es compatible. |
 | RF07 | Mostrar fallos y evidencia. | Se indica falta de confirmación/conexión/señal y se pueden descargar mensajes. |
-| RF08 | Conversar con IA opcional. | Con clave válida responde; sin clave o ante error conserva la guía manual. Prueba real pendiente. |
+| RF08 | Conversar con IA opcional. | Con clave válida responde; sin clave o ante error conserva la guía manual. Prueba real realizada el 19 de noviembre de 2026. |
 | RNF01 | Separar componentes. | Firmware, lógica, conexión, IA y escena están en archivos independientes. |
 | RNF02 | Proteger credenciales. | La clave solo se lee en el servidor desde entorno/secretos; no va al navegador ni a MQTT. |
 | RNF03 | Informar el estado con texto. | Los cambios no dependen únicamente del color. |
@@ -132,20 +132,20 @@ No se necesita comprar ni conectar un ESP32 físico. La privacidad del vidrio y 
 | Audio | Reproducción de un archivo elegido del equipo. | Activación manual, controles de reproducción y volumen; no se envía por MQTT. |
 | Visual 3D | Cámara orbital y recorrido, puerta, pantallas, privacidad y luces. | WebGL y recursos Babylon empaquetados por Vite. Modelo procedural, no importado desde Blender. |
 
-El chat usa una llamada HTTPS con biblioteca estándar de Python, evitando añadir un SDK al entorno. El proveedor recomendado es Groq; la guía oficial muestra el modelo `llama-3.3-70b-versatile` y configuración mediante clave [10]. La disponibilidad y las cuotas dependen del servicio/cuenta [11]. La clave permanece fuera del repositorio. No se han hecho llamadas reales al proveedor por falta de credencial; las pruebas del adaptador usan respuestas simuladas.
+El chat usa una llamada HTTPS con biblioteca estándar de Python, evitando añadir un SDK al entorno. El proveedor es Groq, con el modelo `openai/gpt-oss-120b` configurado en el adaptador y permitido en el proyecto de la cuenta [10]. La disponibilidad y las cuotas dependen del servicio/cuenta [11]. La clave permanece fuera del repositorio. El 19 de noviembre se verificaron dos respuestas reales desde la app pública. La primera confundió los niveles QoS; una segunda consulta corrigió la explicación y confirmó que Jade no controla luces ni temporizadores. Las pruebas automatizadas usan respuestas simuladas y no garantizan exactitud pedagógica.
 
 ## 8. Pruebas y resultados
 
 | Prueba | Resultado registrado | Alcance |
 |---|---|---|
-| Suite automática, revisión actual | 31 pruebas Python y 3 JavaScript aprobadas; compilación Vite correcta. | Protocolo, temporizador, acciones del panel, duplicados, fallos de conexión, interfaz y adaptador IA simulado. |
+| Suite automática, revisión actual | 33 pruebas Python y 3 JavaScript aprobadas; compilación Vite correcta. | Protocolo, temporizador, acciones del panel, duplicados, fallos de conexión, interfaz y adaptador IA simulado. |
 | Red de prueba | Seis comprobaciones aprobadas. | Cuatro estados, evento independiente y WSS/TCP; dispositivo emulado en Python, separado de la prueba real siguiente. |
 | Orden real a Wokwi | Concentración confirmada con id `cea5778c11d742e2aa43dd16ae0cf1f6`. | Streamlit → broker → Wokwi → clientes, observado en revisión anterior. |
 | Entrada real en Wokwi | Botón verde cambió a Descanso en la versión React local. | Firmware, interfaz y escena; circuito de cuatro botones guardado en el enlace original. |
 | Desconexión | Se observó “Sin señal reciente”. | Wokwi detenido; captura conservada. |
 | Render y navegación | Dos páginas y escena visibles. | No equivale a evaluación de usabilidad. |
 | Audio/voz y usuarios | Pendiente. | No hay observaciones humanas registradas. |
-| IA real | Pendiente de activación y prueba. | La implementación existe, pero las pruebas simuladas no acreditan respuesta del proveedor. |
+| IA real | Dos respuestas reales comprobadas el 19 de noviembre. | Identidad Jade, continuidad y límite de control comprobados; error conceptual inicial documentado. |
 | Despliegue público | Interfaz React cargada tras reinicio y arranque de Streamlit. | El servicio puede dormir por inactividad; abrir antes de la sustentación. |
 
 Las capturas `evidencia-descanso.png` y `evidencia-desconexion.png` conservan las comprobaciones anteriores. El registro de la revisión actual y el protocolo para participantes acompañan este informe. Un error temporal de compilación `Failed to fetch` en Wokwi se resolvió reintentando. No se midió una mejora de aprendizaje, concentración o ansiedad.
@@ -154,7 +154,7 @@ Las capturas `evidencia-descanso.png` y `evidencia-desconexion.png` conservan la
 
 La simulación demuestra la viabilidad de comunicar un circuito Wokwi con una aplicación multipágina y una vista 3D, diferenciando publicación y confirmación del estado. La edición de tareas y los bloques temporales materializan el flujo propuesto a partir de la protopersona. La evidencia disponible es técnica; la utilidad para estudiantes debe evaluarse con participantes.
 
-Antes de la entrega deben activarse y probarse la IA, verificar micrófono/audio, realizar las tareas de usabilidad y ensayar la sustentación. La versión actual representa privacidad del vidrio, luces por mood, transición naranja y aviso rojo de fin de sesión. La importación de modelos Blender y su investigación quedan para una fase posterior, junto con actuadores físicos, cuentas y pagos; estos últimos tampoco se simulan.
+Antes de la presentación deben verificarse micrófono/audio, realizar las tareas de usabilidad y ensayar la sustentación. La versión actual representa privacidad del vidrio, luces por mood, transición naranja y aviso rojo de fin de sesión. La importación de modelos Blender y su investigación quedan para una fase posterior, junto con actuadores físicos, cuentas y pagos; estos últimos tampoco se simulan.
 
 ## 10. Referencias y anexos
 
@@ -173,3 +173,7 @@ Fuentes técnicas consultadas para esta versión; la disponibilidad de servicios
 11. Groq. Rate Limits. https://console.groq.com/docs/rate-limits
 
 **Anexos:** README (instalación), RUBRICA_Y_PRUEBAS (matriz), VALIDACION_Y_SUSTENTACION (protocolo y guion), DEMO_MQTT (demostración de cuatro estados), carpeta tests, circuito y firmware, capturas y registro de pruebas. Los enlaces de entrega están al comienzo del informe.
+
+## Actualización visual de cierre
+
+JadeUI utiliza fondo oscuro, hero con título amplio y cubículo sin plano exterior visible. Ambiente, Jade y Sesión están en la navegación React superior; Estudio y Descanso conservan sus páginas en la navegación superior de Streamlit. La conexión MQTT se mantiene en un desplegable arriba. La tarjeta derecha está contenida en el componente, no flota fuera del iframe. Los iconos actuales son vectoriales; los PNG personalizados no fueron suministrados. Node/Vite compila la interfaz, no ejecuta un servidor adicional.

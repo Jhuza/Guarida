@@ -1,4 +1,7 @@
-# Guarida · simulación de estudio
+# Guarida · JadeUI
+
+**Estado vigente, 19 de noviembre:** interfaz oscura con navegación superior, Jade verificada con Groq, cuatro estados MQTT y 33 pruebas Python + 3 JavaScript aprobadas. Consultar RUBRICA_Y_PRUEBAS.md y CIERRE_ENTREGA.md; las notas fechadas siguientes son históricas.
+
 
 ## Entrega actual
 
@@ -52,7 +55,7 @@ Estudio y Descanso son páginas distintas, con dos zonas visibles en 3D. Los con
 
 ## Alcance real
 
-La lista inicial de tareas es una guía por reglas, editable. El chat opcional con Groq está implementado, pendiente de activar con una clave propia y verificar con el servicio real: ver [ACTIVAR_IA.md](ACTIVAR_IA.md). No agrega un SDK ni mezcla bibliotecas del portafolio. La conversación de audio con IA y la bienvenida flotante completa siguen pendientes. No se han realizado entrevistas, encuestas ni pruebas con estudiantes. No se atribuyen mejoras demostradas de concentración.
+La lista inicial de tareas es una guía por reglas, editable. El chat Jade con Groq está activado y verificado en la app pública: ver [ACTIVAR_IA.md](ACTIVAR_IA.md). No agrega un SDK ni mezcla bibliotecas del portafolio. La conversación de audio con IA y la bienvenida flotante completa siguen pendientes. No se han realizado entrevistas, encuestas ni pruebas con estudiantes. No se atribuyen mejoras demostradas de concentración.
 
 El temporizador iniciado desde Streamlit espera una confirmación del estado solicitado. Los cambios iniciados desde Wokwi o la escena cambian la disponibilidad, pero no arrancan automáticamente el contador. La organización de tareas y el chat se conservan en la sesión, no en una base de datos; descargar el resumen antes de cerrarla.
 
@@ -62,7 +65,7 @@ El temporizador iniciado desde Streamlit espera una confirmación del estado sol
 - [Matriz de rúbrica y evidencias](RUBRICA_Y_PRUEBAS.md).
 - [Prueba con participantes y guion de sustentación](VALIDACION_Y_SUSTENTACION.md).
 
-Antes de entregar, guardar el proyecto en una cuenta de Wokwi y añadir su enlace; comprobar también el acceso del profesor al repositorio. La publicación en Streamlit requiere seleccionar `app.py` como archivo de entrada, instalar `requirements.txt` y configurar secretos si se activa la IA. El despliegue aún no está comprobado; verificar conectividad MQTT desde el servidor de destino.
+El proyecto Wokwi está guardado. Antes de entregar, comprobar el acceso del profesor al repositorio. La publicación en Streamlit requiere seleccionar `app.py` como archivo de entrada, instalar `requirements.txt` y configurar secretos si se activa la IA. El despliegue y MQTT públicos se comprobaron el 16 de noviembre; repetir el ensayo en la red de presentación.
 
 ## Pruebas
 

@@ -33,7 +33,7 @@ export function createScene(canvas, callbacks) {
   const engine = new Engine(canvas,true,{preserveDrawingBuffer:false,stencil:true});
   engine.setHardwareScalingLevel(window.innerWidth<600?1.25:1);
   const scene = new Scene(engine);
-  scene.clearColor = new Color4(.91,.90,.86,1);
+  scene.clearColor = new Color4(0,0,0,0);
   scene.collisionsEnabled = true;
   scene.skipPointerMovePicking = true;
   const orbit = new ArcRotateCamera('Exterior',-Math.PI/2-.3,1.22,6.8,new Vector3(0,1.15,0),scene);

@@ -16,7 +16,7 @@ UI_BUILD = ROOT/'frontend-react'/'dist'
 UI_PATH = ROOT/'frontend' if os.getenv('GUARIDA_UI') == 'legacy' or not (UI_BUILD/'index.html').exists() else UI_BUILD
 room_component = declare_component('guarida_room', path=str(UI_PATH))
 st.set_page_config(page_title='Guarida · JadeUI', page_icon='◉', layout='wide')
-st.markdown('''<style>.stApp{background:#f4f3ec} h1{font-family:Georgia,serif;font-weight:400;letter-spacing:-.7px} .stButton button{border-radius:10px} [data-testid="stSidebar"]{background:#e9eddf} .block-container{padding-top:2.5rem} </style>''',unsafe_allow_html=True)
+st.markdown('''<style>.stApp{background:#101917} h1{font-family:Georgia,serif;font-weight:400;letter-spacing:-.7px} .stButton button{border-radius:10px} [data-testid="stSidebar"]{background:#17241f} .block-container{padding-top:2.5rem} </style>''',unsafe_allow_html=True)
 if 'timer' not in st.session_state:
     st.session_state.timer = Timer()
     st.session_state.tasks = []
@@ -56,10 +56,8 @@ def connection_status():
     st.caption(getattr(conn, 'endpoint', ''))
     st.caption('Canal activo: '+st.session_state.get('active_room', ''))
 
-with st.sidebar:
-    st.markdown('## ◉ GUARIDA')
-    st.caption('Un espacio para comenzar.')
-    with st.expander('Conexión del simulador', expanded='conn' not in st.session_state):
+with st.container():
+    with st.expander('Conexión del simulador', expanded=False):
         host = st.text_input('Broker', 'broker.hivemq.com', disabled=True)
         room = st.text_input('Código de cubículo', 'jhuza-guarida-20261108')
         transport = st.selectbox('Transporte MQTT', ['WebSocket seguro · 8884', 'TCP · 1883'])
@@ -80,7 +78,6 @@ with st.sidebar:
             st.session_state.pop('planned_timer', None)
         connection_status()
         st.link_button('Abrir simulador Wokwi', 'https://wokwi.com/projects/480507284209602561')
-    st.caption('Prototipo · hardware simulado')
 
 def send(state):
     try:
@@ -184,7 +181,7 @@ def assistant_panel():
 
 def study():
     st.caption('01 / ESTUDIO')
-    st.title('Tu siguiente paso empieza aquí.')
+
     scene('study')
     left,right=st.columns([.4,1])
     with left:
@@ -229,7 +226,7 @@ def study():
 
 def rest():
     st.caption('02 / DESCANSO')
-    st.title('Haz espacio para una pausa.')
+
     scene('rest')
     left,right=st.columns([.4,1])
     with left:
@@ -247,4 +244,4 @@ def rest():
         live_status()
     assistant_panel()
 
-st.navigation([st.Page(study,title='Estudio',icon='📖'),st.Page(rest,title='Descanso',icon='☕')]).run()
+st.navigation([st.Page(study,title='Estudio',icon='📖'),st.Page(rest,title='Descanso',icon='☕')], position='top').run()

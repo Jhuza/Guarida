@@ -29,7 +29,7 @@ for(let i=0;i<5;i++)plant(.45+i*.22,2.01,1.1,.85);plant(1.15,.69,-.25);
 const leds=[];for(const [x,z,w,d] of [[0,1.23,3.05,.018],[-1.55,0,.018,2.5],[1.55,0,.018,2.5],[.9,1.03,1.2,.018]]){const segments=12;for(let i=0;i<segments;i++){const m=leds[i] || mat('LED '+i,'#000000');m.disableLighting=true;const horizontal=w>d;box('Tira LED',horizontal?w/segments:w,.018,horizontal?d:d/segments,x+(horizontal?(i+.5)*w/segments-w/2:0),w===1.2?1.88:.24,z+(horizontal?0:(i+.5)*d/segments-d/2),m,false);if(!leds[i])leds.push(m)}}
 function screen(n,w,h,x,y,z,rotation,text){const m=mat(n,'#132b24'),t=new B.DynamicTexture(n,{width:768,height:512},scene,true);const c=t.getContext();c.fillStyle='#122c24';c.fillRect(0,0,768,512);c.fillStyle='#e5efda';c.font='42px sans-serif';c.fillText('∩  Guarida',45,90);c.font='26px sans-serif';text.forEach((v,i)=>c.fillText(v,45,180+i*64));t.update();m.diffuseTexture=t;m.emissiveTexture=t;const s=B.MeshBuilder.CreatePlane(n,{width:w,height:h,sideOrientation:B.Mesh.DOUBLESIDE},scene);s.position.set(x,y,z);s.rotation.y=rotation;s.material=m;s.actionManager=new B.ActionManager(scene);s.actionManager.registerAction(new B.ExecuteCodeAction(B.ActionManager.OnPickTrigger,()=>onPanel(n==='Pantalla exterior'?'access':'assistant')));return s}
 screen('Panel IA',.82,.57,-1.55,1.53,.25,-Math.PI/2,['Jade · Asistente de estudio','Mood · Música · Privacidad','Toca para comenzar']);screen('Pantalla exterior',.3,.34,1.52,1.35,-1.505,0,['Bienvenido','Abrir acceso']);
-const ground=box('Entorno',200,.1,200,0,-.08,0,mat('Entorno beige','#e0ddcf'));
+// No exterior ground: the cubicle floats against the hero background.
 
 return {door,handle,handleOffset,glass,leds,lamp};
 }
